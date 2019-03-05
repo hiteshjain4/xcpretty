@@ -13,9 +13,11 @@
       a:link { color: #A1D761;}
       footer { clear: both;position: relative;z-index: 10;height: 40px;margin-top: -10px; margin-left:30px; font-size:12px;}
       table { width:100%; border-collapse: collapse;}
+      rect {fill-opacity: 0.0 ;}
       tr td:first-child { width:7%}
       .left { float: left; margin-left:30px;}
       .right { float: right; margin-right: 40px; margin-top: 0; margin-bottom:0;}
+      .piechart {float: left; margin-left: 500px; margin-top: 68px; margin-right: 120px;}
       .test-suite { margin: 0 0 30px 0;}
       .test-suite > .heading { font-family:Menlo, Monaco, monospace; font-weight: bold; border-color: #A1D761; background-color: #B8E986; border-width: 1px;}
       .test-suite.failing > .heading { border-color: #C84F5E; background-color: #E58591;}
@@ -120,6 +122,32 @@
         </section>
       </section>
     </header>
+        <section class="piechart">
+        <div id="piechart" align="middle" style="vertical-align: top;"></div>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+        <script type="text/javascript">
+        // Load google charts
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        // Draw the chart and set the chart values
+        function drawChart() {
+          var data = google.visualization.arrayToDataTable([
+          ['Result', 'Count'],
+          ['Pass', Number(<%= test_count-fail_count %>)],
+          ['Fail', Number(<%= fail_count %>)]
+        ]);
+
+          // Optional; add a title and set the width and height of the chart
+          var options = {'title':'Test Results', 'width':450, 'height':300 };
+
+          // Display the chart inside the <div> element with id="piechart"
+          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+          chart.draw(data, options);
+        }
+        </script>
+        </section>
     <section id="test-suites">
       <% test_suites.each do |name, info| %>
         <% next unless info[:tests].size > 0 %>
